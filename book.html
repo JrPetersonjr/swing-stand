@@ -184,22 +184,7 @@ var STEPS = [
     check: "The plumb bob lands within 1/4 in of the center of the ring." },
   { n: 9, title: "Take apart and coat", show: STEEL, hi: null,
     text: ["Mark every joint, then take it apart.", "Grind every edge smooth and round.", "Make sure every vent hole is open, then powder coat."],
-    check: "No sharp edges anywhere." },
-  { n: 10, title: "Mats and ring in the room", show: OR(M("MAT"), RINGP), hi: OR(M("MAT"), RINGP),
-    text: ["Lay the mats clear of the door, any exit window and the furnace closet.", "Put a rubber pad under each of the 8 floor points.", "Set the ring quarters in place."],
-    check: "The ring sits level and does not rock." },
-  { n: 11, title: "Stand the arms", show: OR(M("MAT"), RINGP, ARMS, M("HW-BOLT")), hi: OR(ARMS, M("HW-BOLT")),
-    text: ["Two people per arm. Set each arm on its joint with the bottom plate underneath.", "Put the bolts in finger-tight."],
-    check: "Each arm stands up on its own." },
-  { n: 12, title: "Hub on top, then tighten", show: OR(M("MAT"), STEEL, BOLTS), hi: OR(HUBP, M("HW-HUBBOLT")),
-    text: ["From a step ladder, set the hub between the 4 flanges and bolt it on.", "Tighten the hub bolts to about 75 ft-lb, then the splice bolts to about 150 ft-lb.", "Screw the cover on."],
-    check: "Every bolt is tight and the hub is level." },
-  { n: 13, title: "Padding, rigging and speaker", show: OR(M("MAT"), STEEL, BOLTS, M("PAD", "WEIGHT", "HW-PIN"), HANG), hi: OR(HANG, M("PAD", "WEIGHT", "HW-PIN")),
-    text: ["Padding on the legs, up to about 6 ft, and over the foot plates.", "Shackle through the lug with its nut and cotter pin. Then the swivel, then the carabiner with the gate locked.", "Strap the speaker to the cover and clip on its safety cord. Add the weights if using them."],
-    check: "Nothing is loose and the gate is locked." },
-  { n: 14, title: "Test, then hang the swing", show: ALL, hi: M("SWING"),
-    text: ["Hang 700 lb still for 10 minutes. The hub has to come back to the same height.", "Have an adult swing and spin hard for 10 minutes. No foot should lift off the floor.", "Then hang the swing on the carabiner."],
-    check: "Both tests passed." }
+    check: "No sharp edges anywhere." }
 ];
 
 /* page text first, so it reads fine even without 3D */
