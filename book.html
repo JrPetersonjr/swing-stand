@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Swing Stand Build Book</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: one plain reading column. Pictures full width, text under them. */
+:root {
+  --bg: #F4F5F5;
+  --panel: #FFFFFF;
+  --fg: #1B2228;
+  --muted: #5A646D;
+  --line: #D3D8DC;
+  --sunk: #E7EAEC;
+  --accent: #B4470A;
+  --f-body: "Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14181B; --panel: #1B2126; --fg: #E5E8EA; --muted: #A0AAB2; --line: #323B42; --sunk: #171C20; --accent: #F08A45;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14181B; --panel: #1B2126; --fg: #E5E8EA; --muted: #A0AAB2; --line: #323B42; --sunk: #171C20; --accent: #F08A45;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 18px; line-height: 1.65; }
+.wrap { max-width: 760px; margin: 0 auto; padding-block: 36px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 40px; }
+h1 { font-size: 2rem; margin: 0; line-height: 1.2; }
+h2 { font-size: 1.4rem; margin: 0; line-height: 1.25; border-bottom: 2px solid var(--fg); padding-bottom: 6px; }
+h3 { font-size: 1.15rem; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent); }
+section { display: grid; gap: 14px; }
+ol, ul { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; }
+.muted { color: var(--muted); }
+
+.viewer { background: var(--panel); border: 1px solid var(--line); }
+.vbar { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; border-bottom: 1px solid var(--line); }
+button { font: inherit; font-size: 0.9rem; background: var(--bg); color: var(--fg); border: 1px solid var(--line); padding: 6px 12px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.stage { position: relative; height: min(60vh, 480px); min-height: 300px; background: var(--sunk); }
+.stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.vmsg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); text-align: center; padding: 16px; }
+.vinfo { position: absolute; left: 10px; bottom: 10px; right: 10px; pointer-events: none; }
+.vinfo span { background: var(--panel); border: 1px solid var(--line); padding: 4px 10px; font-size: 0.95rem; }
+.vhelp { padding: 8px 12px; font-size: 0.9rem; color: var(--muted); border-top: 1px solid var(--line); }
+
+.tblwrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 0.95rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 700; background: var(--bg); }
+tr:last-child td { border-bottom: none; }
+td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.c { font-weight: 700; white-space: nowrap; }
+
+.step { display: grid; gap: 10px; }
+.step .pic { background: var(--sunk); border: 1px solid var(--line); aspect-ratio: 3 / 2; display: grid; place-items: center; max-width: 100%; }
+.step .pic img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.step .pic span { color: var(--muted); font-size: 0.9rem; }
+.check { border-left: 4px solid var(--accent); padding-left: 12px; }
+.note { border-left: 4px solid var(--accent); background: var(--panel); padding: 12px 16px; }
+footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 14px; }
+</style><style>body{margin:0}</style>
+</head>
+<body>
+
+
+<div class="wrap">
+
+<section>
+  <h1>Swing Stand Build Book</h1>
+</section>
+
+<section>
+  <h2>3D model</h2>
+  <div class="viewer">
+    <div class="vbar">
+      <button type="button" id="v-iso" data-view="iso">3/4 view</button>
+      <button type="button" id="v-side" data-view="side">Side</button>
+      <button type="button" id="v-top" data-view="top">Top</button>
+      <button type="button" id="v-zin">Zoom in</button>
+      <button type="button" id="v-zout">Zoom out</button>
+    </div>
+    <div class="stage" id="stage">
+      <div class="vmsg" id="vmsg">Loading the model...</div>
+      <div class="vinfo" id="vinfo"></div>
+    </div>
+    <div class="vhelp">Drag to turn it. Right-drag to slide it. Tap a part to see its name.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Parts</h2>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Code</th><th>Part</th><th>Qty</th><th>Material and size</th></tr></thead>
+    <tbody>
+      <tr><td class="c">AR</td><td>Arm</td><td class="n">4</td><td>3 in Sch 40 pipe. 37-7/16 in straight leg, then a 90 degree bend at R 46-15/16 to the centerline</td></tr>
+      <tr><td class="c">RQ</td><td>Ring quarter</td><td class="n">4</td><td>3x3x3/16 square tube, rolled to R 50-15/16, 90 degrees each</td></tr>
+      <tr><td class="c">AF</td><td>Arm foot / splice plate</td><td class="n">4</td><td>1/2 in plate, 12 x 8, CNC</td></tr>
+      <tr><td class="c">BSP</td><td>Bottom splice plate</td><td class="n">4</td><td>3/8 in plate, 12 x 4, CNC</td></tr>
+      <tr><td class="c">AG</td><td>Foot gusset</td><td class="n">16</td><td>3/8 in plate, 2-1/4 x 4 triangle, CNC</td></tr>
+      <tr><td class="c">RF</td><td>Ring foot</td><td class="n">4</td><td>3/8 in plate, 4 x 4, CNC</td></tr>
+      <tr><td class="c">RC</td><td>Ring end cap</td><td class="n">8</td><td>3/16 in plate, 3 x 3, with a 1/4 vent hole</td></tr>
+      <tr><td class="c">HF</td><td>Hub flange</td><td class="n">4</td><td>1/2 in plate, 6 x 6, CNC</td></tr>
+      <tr><td class="c">HB</td><td>Hub box</td><td class="n">1</td><td>1/2 in plate: 2 walls 7 x 7, 2 walls 6 x 7, bottom 7 x 7</td></tr>
+      <tr><td class="c">HC</td><td>Hub cover</td><td class="n">1</td><td>1/4 in plate, 8 x 8, with speaker strap slots</td></tr>
+      <tr><td class="c">L1</td><td>Hang lug</td><td class="n">1</td><td>1/2 in plate, 4 x 5, 13/16 hole</td></tr>
+      <tr><td class="c">SL</td><td>Bolt sleeve</td><td class="n">16</td><td>3/4 OD x .120 wall tube, 3 in long</td></tr>
+      <tr><td class="c">PG</td><td>Weight peg (optional)</td><td class="n">4</td><td>1-1/2 Sch 40 pipe, 8 in long</td></tr>
+      <tr><td></td><td>Splice bolts</td><td class="n">16</td><td>5/8-11 x 5 Grade 8, hardened washers, lock nuts</td></tr>
+      <tr><td></td><td>Hub bolts</td><td class="n">16</td><td>1/2-13 x 2 Grade 8, hardened washers, lock nuts</td></tr>
+      <tr><td></td><td>Cover screws</td><td class="n">4</td><td>1/4-20 x 3/4</td></tr>
+      <tr><td></td><td>Shackle</td><td class="n">1</td><td>5/8 bolt-type anchor shackle, WLL 3-1/4 ton</td></tr>
+      <tr><td></td><td>Swivel</td><td class="n">1</td><td>Ball-bearing swing swivel, stamped 1,500 lb or more</td></tr>
+      <tr><td></td><td>Carabiner</td><td class="n">1</td><td>Steel locking, stamped 25 kN or more</td></tr>
+      <tr><td></td><td>Padding</td><td class="n">-</td><td>Foam pipe insulation for 3 in pipe, or split pool noodles</td></tr>
+      <tr><td></td><td>Rubber pads</td><td class="n">8</td><td>3/8 in, under the 8 floor points</td></tr>
+      <tr><td></td><td>Stall mats</td><td class="n">4</td><td>3/4 in rubber, 4 x 6 ft</td></tr>
+      <tr><td></td><td>Speaker</td><td class="n">1</td><td>Small rugged Bluetooth speaker, strap and safety cord</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Steps</h2>
+  <p class="muted">Orange is what each step adds.</p>
+  <div id="stepsList" style="display:grid;gap:36px"></div>
+</section>
+
+<footer>Rev C, 2026-11-22. Sizes in inches.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(function () {
+"use strict";
+
+function M() { var m = Array.prototype.slice.call(arguments); return function (o) { return m.indexOf(o.userData.mark) >= 0; }; }
+function OR() { var f = Array.prototype.slice.call(arguments); return function (o) { return f.some(function (g) { return g(o); }); }; }
+var RINGP = M("RQ", "RF", "PG", "BSP");
+var ARMS = M("AR", "AF", "AG", "HF");
+var HUBP = M("HB", "HC", "L1");
+var STEEL = OR(RINGP, ARMS, HUBP);
+var HANG = M("HW-SHACKLE", "HW-SWIVEL", "HW-CARABINER");
+var BOLTS = M("HW-BOLT", "HW-HUBBOLT");
+var ALL = function () { return true; };
+
+var NAMES = { AR: "Arm", RQ: "Ring quarter", AF: "Arm foot / splice plate", BSP: "Bottom splice plate", AG: "Foot gusset", RF: "Ring foot",
+  HF: "Hub flange", HB: "Hub box", HC: "Hub cover", L1: "Hang lug", PG: "Weight peg", "HW-BOLT": "Splice bolt", "HW-HUBBOLT": "Hub bolt",
+  "HW-SHACKLE": "Shackle", "HW-SWIVEL": "Swivel", "HW-CARABINER": "Carabiner", "HW-PIN": "Hitch pin", WEIGHT: "Weight plate (optional)",
+  MAT: "Stall mat", PAD: "Padding", SWING: "Swing" };
+
+var STEPS = [
+  { n: 1, title: "Cut and roll the parts", show: STEEL, hi: null,
+    text: ["Cut all the plates on the CNC from the DXF files.", "Chalk one arm and one ring quarter full size on the shop floor.", "Roll the 4 arms and the 4 ring quarters to match those outlines."],
+    check: "All 4 arms match the outline within 1/8 in. Same for the 4 quarters." },
+  { n: 2, title: "Lay out the ring", show: M("RQ"), hi: M("RQ"),
+    text: ["Lay the 4 quarters in a circle on a flat floor, ends tight together.", "Measure across the circle in a few directions."],
+    check: "Every measurement is 101-13/16 in to the tube centerline, within 1/8 in." },
+  { n: 3, title: "Drill the joints and fit the sleeves", show: M("RQ", "AF", "BSP"), hi: M("AF", "BSP"),
+    text: ["At each joint, clamp an AF plate on top and a BSP plate underneath.", "Drill down through the ring using the plate holes as a guide.", "Push a sleeve through each hole and weld it flush top and bottom.", "Mark each plate to its joint."],
+    check: "All 16 bolts drop in by hand." },
+  { n: 4, title: "Ring feet and end caps", show: RINGP, hi: M("RF", "PG"),
+    text: ["Weld a ring foot under the middle of each quarter.", "Cap all 8 ring ends and keep the vent holes open.", "If using weights, weld a peg on top over each foot."],
+    check: "The bolted ring sits flat on all 8 points." },
+  { n: 5, title: "Foot plates on the arms", show: M("AR", "AF", "AG"), hi: M("AF", "AG"),
+    text: ["Unbolt the AF plates. Weld one square to the end of each leg, on the etched circle.", "Weld 4 gussets on each leg at 45 degrees, clear of the bolt holes."],
+    check: "Each leg stands plumb on its plate." },
+  { n: 6, title: "Hub flanges on the arms", show: ARMS, hi: M("HF"),
+    text: ["Weld a hub flange square to the top end of each arm.", "With the leg plumb, the flange face should be plumb too. A simple jig keeps all 4 the same."],
+    check: "All 4 flanges plumb and at the same height." },
+  { n: 7, title: "Build the hub", show: HUBP, hi: M("HB", "L1"), fitTo: HUBP, zoom: 0.55,
+    text: ["Weld the 4 walls and the bottom plate into a box, with the 7 in walls lapping the 6 in walls.", "Weld the hang lug under the bottom plate on the etched line.", "Tap the top edges of the walls 1/4-20 for the cover."],
+    check: "The lug hole is right under the middle of the box." },
+  { n: 8, title: "Trial fit in the shop", show: OR(STEEL, BOLTS), hi: BOLTS,
+    text: ["Bolt the ring together.", "Stand each arm on its joint and bolt it finger-tight.", "Lift the hub into place and bolt all 4 arms to it, then tighten everything.", "Hang a plumb bob from the lug."],
+    check: "The plumb bob lands within 1/4 in of the center of the ring." },
+  { n: 9, title: "Take apart and coat", show: STEEL, hi: null,
+    text: ["Mark every joint, then take it apart.", "Grind every edge smooth and round.", "Make sure every vent hole is open, then powder coat."],
+    check: "No sharp edges anywhere." },
+  { n: 10, title: "Mats and ring in the room", show: OR(M("MAT"), RINGP), hi: OR(M("MAT"), RINGP),
+    text: ["Lay the mats clear of the door, any exit window and the furnace closet.", "Put a rubber pad under each of the 8 floor points.", "Set the ring quarters in place."],
+    check: "The ring sits level and does not rock." },
+  { n: 11, title: "Stand the arms", show: OR(M("MAT"), RINGP, ARMS, M("HW-BOLT")), hi: OR(ARMS, M("HW-BOLT")),
+    text: ["Two people per arm. Set each arm on its joint with the bottom plate underneath.", "Put the bolts in finger-tight."],
+    check: "Each arm stands up on its own." },
+  { n: 12, title: "Hub on top, then tighten", show: OR(M("MAT"), STEEL, BOLTS), hi: OR(HUBP, M("HW-HUBBOLT")),
+    text: ["From a step ladder, set the hub between the 4 flanges and bolt it on.", "Tighten the hub bolts to about 75 ft-lb, then the splice bolts to about 150 ft-lb.", "Screw the cover on."],
+    check: "Every bolt is tight and the hub is level." },
+  { n: 13, title: "Padding, rigging and speaker", show: OR(M("MAT"), STEEL, BOLTS, M("PAD", "WEIGHT", "HW-PIN"), HANG), hi: OR(HANG, M("PAD", "WEIGHT", "HW-PIN")),
+    text: ["Padding on the legs, up to about 6 ft, and over the foot plates.", "Shackle through the lug with its nut and cotter pin. Then the swivel, then the carabiner with the gate locked.", "Strap the speaker to the cover and clip on its safety cord. Add the weights if using them."],
+    check: "Nothing is loose and the gate is locked." },
+  { n: 14, title: "Test, then hang the swing", show: ALL, hi: M("SWING"),
+    text: ["Hang 700 lb still for 10 minutes. The hub has to come back to the same height.", "Have an adult swing and spin hard for 10 minutes. No foot should lift off the floor.", "Then hang the swing on the carabiner."],
+    check: "Both tests passed." }
+];
+
+/* page text first, so it reads fine even without 3D */
+var list = document.getElementById("stepsList");
+function el(tag, attrs, kids) {
+  var e = document.createElement(tag);
+  if (attrs) for (var k in attrs) { if (k === "text") e.textContent = attrs[k]; else e.setAttribute(k, attrs[k]); }
+  (kids || []).forEach(function (c) { if (c) e.appendChild(c); });
+  return e;
+}
+STEPS.forEach(function (s, i) {
+  var ol = el("ol");
+  s.text.forEach(function (t) { ol.appendChild(el("li", { text: t })); });
+  var chk = el("p", { class: "check" }); chk.appendChild(el("strong", { text: "Check: " })); chk.appendChild(document.createTextNode(s.check));
+  list.appendChild(el("article", { class: "step", id: "step-" + s.n }, [
+    el("h3", { text: "Step " + s.n + ". " + s.title }),
+    el("div", { class: "pic", id: "pic-" + i }, [el("span", { text: "Drawing..." })]),
+    ol, chk
+  ]));
+});
+
+var stage = document.getElementById("stage"), vmsg = document.getElementById("vmsg"), vinfo = document.getElementById("vinfo");
+if (!window.THREE || !THREE.GLTFLoader || !THREE.OrbitControls) { vmsg.textContent = "The 3D model could not load. The steps below are complete without it."; return; }
+
+function std(c, x) { return new THREE.MeshStandardMaterial(Object.assign({ color: c, metalness: 0.25, roughness: 0.55 }, x || {})); }
+var MAT = { tube: std(0x8C969E), pipe: std(0x8C969E), plate: std(0x5E6872), hardware: std(0xD9661F), bolt: std(0xC8B45A),
+  weight: std(0x2A2C2E, { roughness: 0.85 }), mat: std(0x26282A, { roughness: 0.95, metalness: 0 }),
+  pad: std(0x3B7FB0, { transparent: true, opacity: 0.55, metalness: 0 }), swing: std(0x9A6BB0, { transparent: true, opacity: 0.6, metalness: 0 }) };
+var HI = std(0xE0621A, { emissive: 0x3a1400, metalness: 0.15 });
+var CTX = std(0xB9C0C5, { metalness: 0.05, roughness: 0.8, transparent: true, opacity: 0.55, depthWrite: false });
+var EDGE = new THREE.LineBasicMaterial({ color: 0x1B2228, transparent: true, opacity: 0.5 });
+function baseMat(o) {
+  var g = o.userData.group, mk = o.userData.mark;
+  if (mk === "HW-BOLT" || mk === "HW-HUBBOLT") return MAT.bolt;
+  if (mk === "MAT") return MAT.mat;
+  if (mk === "PAD") return MAT.pad;
+  if (mk === "SWING") return MAT.swing;
+  return MAT[g] || MAT.tube;
+}
+
+var scene = new THREE.Scene();
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f94, 0.85));
+var sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.position.set(3, 5, 4); scene.add(sun);
+var fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(-4, 2, -3); scene.add(fill);
+
+var renderer;
+try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+catch (e) { vmsg.textContent = "This device could not start 3D. The steps below are complete without it."; return; }
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+stage.insertBefore(renderer.domElement, vinfo);
+var camera = new THREE.PerspectiveCamera(32, 1, 0.01, 100);
+var controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.12;
+controls.mouseButtons = { LEFT: THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.PAN };
+var shot = null;
+try { shot = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true }); shot.setPixelRatio(1); } catch (e) { shot = null; }
+var shotCam = new THREE.PerspectiveCamera(30, 3 / 2, 0.01, 100);
+
+var meshes = [];
+var DIRS = { iso: new THREE.Vector3(1.0, 0.72, 1.15).normalize(), side: new THREE.Vector3(0.0001, 0.08, 1).normalize(), top: new THREE.Vector3(0.0001, 1, 0.02).normalize() };
+var picked = null, dir = "iso";
+
+function apply(show, hi) {
+  meshes.forEach(function (o) {
+    o.visible = !!show(o);
+    o.material = hi ? (hi(o) ? HI : CTX) : baseMat(o);
+    if (o.userData.edges) o.userData.edges.visible = !hi || hi(o);
+  });
+}
+function boxOf(pred) { var b = new THREE.Box3(); meshes.forEach(function (o) { if (o.visible && (!pred || pred(o))) b.expandByObject(o); }); return b; }
+function fit(cam, box, d, zoom, aspect) {
+  var c = box.getCenter(new THREE.Vector3()), r = box.getBoundingSphere(new THREE.Sphere()).radius || 1;
+  var fov = cam.fov * Math.PI / 180, fovMin = aspect < 1 ? 2 * Math.atan(Math.tan(fov / 2) * aspect) : fov;
+  var dist = r / Math.sin(fovMin / 2) * 1.02 / (zoom || 1);
+  cam.position.copy(c).add(DIRS[d].clone().multiplyScalar(dist));
+  cam.near = dist / 100; cam.far = dist * 10; cam.lookAt(c); cam.updateProjectionMatrix();
+  return c;
+}
+function live() { apply(ALL, picked); }
+function refit() { var c = fit(camera, boxOf(), dir, 1, stage.clientWidth / stage.clientHeight); controls.target.copy(c); controls.update(); }
+function snapshot(show, hi, fitPred, w, h, zoom) {
+  if (!shot) return null;
+  apply(show, hi);
+  shot.setSize(w, h, false); shotCam.aspect = w / h;
+  fit(shotCam, boxOf(fitPred), "iso", zoom || 1, w / h);
+  shot.render(scene, shotCam);
+  var url = shot.domElement.toDataURL("image/png");
+  live();
+  return url;
+}
+function makeImages() {
+  var j = 0;
+  (function next() {
+    if (j >= STEPS.length) return;
+    var s = STEPS[j], url = snapshot(s.show, s.hi, s.fitTo || null, 900, 600, s.zoom || 1), box = document.getElementById("pic-" + j);
+    if (url && box) { box.textContent = ""; box.appendChild(el("img", { src: url, alt: "Step " + s.n + ": " + s.title })); }
+    j++; requestAnimationFrame(next);
+  })();
+}
+function resize() { var w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+window.addEventListener("resize", resize);
+
+var ray = new THREE.Raycaster(), ptr = new THREE.Vector2(), down = null;
+renderer.domElement.addEventListener("pointerdown", function (e) { down = [e.clientX, e.clientY]; });
+renderer.domElement.addEventListener("pointerup", function (e) {
+  if (!down || Math.abs(e.clientX - down[0]) + Math.abs(e.clientY - down[1]) > 6) return;
+  var r = renderer.domElement.getBoundingClientRect();
+  ptr.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(ptr, camera);
+  var hits = ray.intersectObjects(meshes, false);
+  vinfo.textContent = "";
+  if (!hits.length) { picked = null; live(); return; }
+  var mk = hits[0].object.userData.mark;
+  picked = M(mk); live();
+  var code = /^[A-Z0-9]{1,3}$/.test(mk) && mk !== "MAT" && mk !== "PAD" ? mk + "  " : "";
+  vinfo.appendChild(el("span", { text: code + (NAMES[mk] || mk) }));
+});
+document.querySelectorAll("[data-view]").forEach(function (b) { b.addEventListener("click", function () { dir = b.getAttribute("data-view"); refit(); }); });
+function zoomBy(f) { var off = camera.position.clone().sub(controls.target).multiplyScalar(f); camera.position.copy(controls.target).add(off); controls.update(); }
+document.getElementById("v-zin").addEventListener("click", function () { zoomBy(0.8); });
+document.getElementById("v-zout").addEventListener("click", function () { zoomBy(1.25); });
+
+fetch("files/swing_stand.glb").then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.arrayBuffer(); })
+.then(function (buf) {
+  new THREE.GLTFLoader().parse(buf, "", function (gltf) {
+    gltf.scene.traverse(function (o) {
+      if (o.isMesh && o.userData && o.userData.mark) {
+        meshes.push(o);
+        if (o.userData.group === "tube" || o.userData.group === "plate") {
+          var ed = new THREE.LineSegments(new THREE.EdgesGeometry(o.geometry, 30), EDGE);
+          o.add(ed); o.userData.edges = ed;
+        }
+      }
+    });
+    scene.add(gltf.scene);
+    vmsg.remove(); resize(); live(); refit();
+    (function loop() { controls.update(); renderer.render(scene, camera); requestAnimationFrame(loop); })();
+    requestAnimationFrame(makeImages);
+  }, function () { vmsg.textContent = "The model file could not be read. The steps below are complete without it."; });
+}).catch(function () { vmsg.textContent = "The model file could not load. The steps below are complete without it."; });
+})();
+</script>
+
+</body>
+</html>

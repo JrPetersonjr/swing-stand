@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Heavy-Duty Swing Stand</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one plain reading column; drawings and tables scroll inside their own boxes. */
+:root {
+  --bg: #F4F5F5; --panel: #FFFFFF; --fg: #1B2228; --muted: #5A646D; --line: #D3D8DC;
+  --steel: #D5DBDF; --steel2: #AEB8BF; --accent: #B4470A; --pad: #3B7FB0;
+  --f-body: "Atkinson Hyperlegible", "Segoe UI", Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14181B; --panel: #1B2126; --fg: #E5E8EA; --muted: #A0AAB2; --line: #323B42;
+    --steel: #3A444C; --steel2: #56626B; --accent: #F08A45; --pad: #5DA3D6; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14181B; --panel: #1B2126; --fg: #E5E8EA; --muted: #A0AAB2; --line: #323B42;
+  --steel: #3A444C; --steel2: #56626B; --accent: #F08A45; --pad: #5DA3D6; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 18px; line-height: 1.65; }
+.wrap { max-width: 820px; margin: 0 auto; padding-block: 36px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 40px; }
+h1 { font-size: 2rem; margin: 0; line-height: 1.2; }
+h2 { font-size: 1.4rem; margin: 0; line-height: 1.25; border-bottom: 2px solid var(--fg); padding-bottom: 6px; }
+p { margin: 0; }
+a { color: var(--accent); }
+section { display: grid; gap: 14px; }
+ul { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; }
+.muted { color: var(--muted); }
+figure { margin: 0; background: var(--panel); border: 1px solid var(--line); }
+figcaption { padding: 8px 12px; border-top: 1px solid var(--line); font-size: 0.95rem; color: var(--muted); }
+.scroll { overflow-x: auto; }
+.tblwrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; min-width: 540px; font-size: 0.95rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 700; background: var(--bg); }
+tr:last-child td { border-bottom: none; }
+td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.c { font-weight: 700; white-space: nowrap; }
+tfoot td { font-weight: 700; background: var(--bg); }
+.note { border-left: 4px solid var(--accent); background: var(--panel); padding: 12px 16px; }
+footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 14px; }
+.dwg { display: block; width: 100%; min-width: 620px; height: auto; }
+.dwg.detail { min-width: 540px; }
+.dwg text { font-family: var(--f-mono); fill: var(--fg); paint-order: stroke; stroke: var(--panel); stroke-linejoin: round; }
+.dwg text.m { fill: var(--muted); }
+.dwg text.d { fill: var(--accent); font-weight: 500; }
+.dwg .steel { fill: var(--steel); stroke: var(--fg); stroke-width: 0.3; }
+.dwg .plate { fill: var(--steel2); stroke: var(--fg); stroke-width: 0.2; }
+.dwg .platefade { fill: var(--steel2); fill-opacity: 0.45; stroke: var(--fg); stroke-width: 0.06; }
+.dwg .hole, .dwg .bolt { fill: var(--panel); stroke: var(--fg); stroke-width: 0.15; }
+.dwg .hw { fill: var(--accent); stroke: var(--fg); stroke-width: 0.15; }
+.dwg .ring { fill: none; stroke: var(--accent); stroke-width: 0.45; }
+.dwg .pipeo { fill: none; stroke: var(--fg); stroke-linejoin: round; }
+.dwg .pipei { fill: none; stroke: var(--steel); stroke-linejoin: round; }
+.dwg .steelring { fill: none; stroke: var(--fg); stroke-width: 0.3; }
+.dwg .ringcl { fill: none; stroke: var(--steel); stroke-width: 2.7; }
+.dwg .steeledge { fill: none; stroke: var(--fg); stroke-width: 0.06; }
+.dwg .etch { fill: none; stroke: var(--accent); stroke-width: 0.05; stroke-dasharray: 0.25 0.15; }
+.dwg .ghost { fill: none; stroke: var(--muted); stroke-width: 0.2; stroke-dasharray: 1 0.7; }
+.dwg .pad { fill: var(--pad); fill-opacity: 0.18; stroke: var(--pad); stroke-width: 0.3; stroke-dasharray: 1.2 0.6; }
+.dwg .mat { fill: var(--steel); fill-opacity: 0.3; stroke: var(--muted); stroke-width: 0.25; stroke-dasharray: 1.4 0.8; }
+.dwg .zone { fill: var(--accent); fill-opacity: 0.06; stroke: var(--accent); stroke-width: 0.25; stroke-dasharray: 1.4 0.8; }
+.dwg .cl { stroke: var(--muted); stroke-width: 0.15; stroke-dasharray: 3 0.8 0.6 0.8; fill: none; }
+.dwg .floor { stroke: var(--fg); stroke-width: 0.5; fill: none; }
+.dwg .rope { stroke: var(--muted); stroke-width: 0.3; fill: none; }
+.dwg .dim { stroke: var(--accent); stroke-width: 0.18; fill: none; }
+.dwg .ext { stroke: var(--accent); stroke-width: 0.1; fill: none; }
+.dwg .ldr { stroke: var(--muted); stroke-width: 0.12; fill: none; }
+.dwg .brk { stroke: var(--fg); stroke-width: 0.15; fill: none; }
+.dwg.detail .dim { stroke-width: 0.04; }
+.dwg.detail .ext { stroke-width: 0.025; }
+.dwg.detail .plate, .dwg.detail .steel, .dwg.detail .bolt, .dwg.detail .brk { stroke-width: 0.05; }
+</style><style>body{margin:0}</style>
+</head>
+<body>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="1.6" markerHeight="1.6" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="var(--accent)"/></marker>
+  <marker id="arrs" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="0.9" markerHeight="0.9" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="var(--accent)"/></marker>
+  <marker id="arrt" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="0.32" markerHeight="0.32" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="var(--accent)"/></marker>
+</defs></svg>
+
+<div class="wrap">
+
+<section>
+  <h1>Heavy-Duty Swing Stand</h1>
+  <p>Crossed-arch swing stand on a 4-piece ring base. 92 in tall, 105 in ring. Rated for a 350 lb rider, 1,050 lb peak hanging load.</p>
+</section>
+
+<section>
+  <h2>Drawing 1: elevation</h2>
+  <figure><div class="scroll"><svg class="dwg" viewBox="-70 -2 140 112" role="img" aria-label="Elevation through one arch: two rolled arms meet at the hub over the hang point, legs land on the ring."><line x1="-66.00" y1="4.00" x2="66.00" y2="4.00" class="ghost"/><text x="-66.00" y="2.60" class="m" text-anchor="start" style="font-size:2.2px;stroke-width:0.70px">CEILING 96</text><line x1="0.00" y1="1.00" x2="0.00" y2="103.00" class="cl"/><text x="1.00" y="2.00" class="m" text-anchor="start" style="font-size:2.2px;stroke-width:0.70px">CL HANG POINT</text><line x1="-66.00" y1="100.00" x2="66.00" y2="100.00" class="floor"/><rect x="-52.41" y="96.62" width="3.00" height="3.00" class="steel"/><rect x="-56.91" y="96.12" width="12.00" height="0.50" class="plate"/><rect x="-52.91" y="99.62" width="4.00" height="0.38" class="plate"/><rect x="-53.66" y="60.00" width="5.50" height="32.00" class="pad" rx="1"/><rect x="49.41" y="96.62" width="3.00" height="3.00" class="steel"/><rect x="44.91" y="96.12" width="12.00" height="0.50" class="plate"/><rect x="48.91" y="99.62" width="4.00" height="0.38" class="plate"/><rect x="48.16" y="60.00" width="5.50" height="32.00" class="pad" rx="1"/><line x1="-49.41" y1="98.12" x2="49.41" y2="98.12" class="ghost"/><text x="0.00" y="97.33" class="m" text-anchor="middle" style="font-size:1.8px;stroke-width:0.58px">RING (BEHIND)</text><path d="M-50.91 96.12 L-50.91 58.66 L-50.87 56.62 L-50.73 54.57 L-50.51 52.54 L-50.20 50.52 L-49.80 48.51 L-49.31 46.52 L-48.74 44.56 L-48.08 42.62 L-47.34 40.71 L-46.52 38.84 L-45.61 37.00 L-44.63 35.21 L-43.56 33.46 L-42.43 31.75 L-41.22 30.10 L-39.94 28.51 L-38.59 26.97 L-37.17 25.49 L-35.69 24.07 L-34.15 22.73 L-32.56 21.44 L-30.91 20.23 L-29.21 19.10 L-27.46 18.03 L-25.66 17.05 L-23.83 16.15 L-21.95 15.32 L-20.04 14.58 L-18.11 13.92 L-16.14 13.35 L-14.15 12.86 L-12.15 12.46 L-10.12 12.15 L-8.09 11.93 L-6.05 11.79 L-4.00 11.75" class="pipeo" style="stroke-width:4.1px"/><path d="M-50.91 96.12 L-50.91 58.66 L-50.87 56.62 L-50.73 54.57 L-50.51 52.54 L-50.20 50.52 L-49.80 48.51 L-49.31 46.52 L-48.74 44.56 L-48.08 42.62 L-47.34 40.71 L-46.52 38.84 L-45.61 37.00 L-44.63 35.21 L-43.56 33.46 L-42.43 31.75 L-41.22 30.10 L-39.94 28.51 L-38.59 26.97 L-37.17 25.49 L-35.69 24.07 L-34.15 22.73 L-32.56 21.44 L-30.91 20.23 L-29.21 19.10 L-27.46 18.03 L-25.66 17.05 L-23.83 16.15 L-21.95 15.32 L-20.04 14.58 L-18.11 13.92 L-16.14 13.35 L-14.15 12.86 L-12.15 12.46 L-10.12 12.15 L-8.09 11.93 L-6.05 11.79 L-4.00 11.75" class="pipei" style="stroke-width:3.1px"/><polygon points="-49.16,96.12 -46.91,96.12 -49.16,92.12" class="plate"/><polygon points="-52.66,96.12 -54.91,96.12 -52.66,92.12" class="plate"/><path d="M50.91 96.12 L50.91 58.66 L50.87 56.62 L50.73 54.57 L50.51 52.54 L50.20 50.52 L49.80 48.51 L49.31 46.52 L48.74 44.56 L48.08 42.62 L47.34 40.71 L46.52 38.84 L45.61 37.00 L44.63 35.21 L43.56 33.46 L42.43 31.75 L41.22 30.10 L39.94 28.51 L38.59 26.97 L37.17 25.49 L35.69 24.07 L34.15 22.73 L32.56 21.44 L30.91 20.23 L29.21 19.10 L27.46 18.03 L25.66 17.05 L23.83 16.15 L21.95 15.32 L20.04 14.58 L18.11 13.92 L16.14 13.35 L14.15 12.86 L12.15 12.46 L10.12 12.15 L8.09 11.93 L6.05 11.79 L4.00 11.75" class="pipeo" style="stroke-width:4.1px"/><path d="M50.91 96.12 L50.91 58.66 L50.87 56.62 L50.73 54.57 L50.51 52.54 L50.20 50.52 L49.80 48.51 L49.31 46.52 L48.74 44.56 L48.08 42.62 L47.34 40.71 L46.52 38.84 L45.61 37.00 L44.63 35.21 L43.56 33.46 L42.43 31.75 L41.22 30.10 L39.94 28.51 L38.59 26.97 L37.17 25.49 L35.69 24.07 L34.15 22.73 L32.56 21.44 L30.91 20.23 L29.21 19.10 L27.46 18.03 L25.66 17.05 L23.83 16.15 L21.95 15.32 L20.04 14.58 L18.11 13.92 L16.14 13.35 L14.15 12.86 L12.15 12.46 L10.12 12.15 L8.09 11.93 L6.05 11.79 L4.00 11.75" class="pipei" style="stroke-width:3.1px"/><polygon points="52.66,96.12 54.91,96.12 52.66,92.12" class="plate"/><polygon points="49.16,96.12 46.91,96.12 49.16,92.12" class="plate"/><rect x="-3.50" y="8.00" width="7.00" height="7.75" class="plate"/><rect x="-4.00" y="8.75" width="0.50" height="6.00" class="plate"/><rect x="3.50" y="8.75" width="0.50" height="6.00" class="plate"/><rect x="-2.00" y="15.75" width="4.00" height="5.00" class="plate"/><circle cx="0" cy="18.75" r="0.41" class="hole"/><path d="M-0.45 18.15 h0.9 v4.6 a0.45 0.45 0 0 1 -0.9 0 z" class="hw"/><circle cx="0" cy="23.65" r="0.9" class="ring"/><rect x="-0.70" y="24.55" width="1.40" height="3.60" class="hw" rx="0.3"/><circle cx="0" cy="29.05" r="0.9" class="ring"/><rect x="-1.00" y="30.15" width="2.00" height="5.00" class="ring" rx="1"/><line x1="0.00" y1="35.15" x2="-13.00" y2="77.00" class="rope"/><line x1="0.00" y1="35.15" x2="13.00" y2="77.00" class="rope"/><ellipse cx="0" cy="78.00" rx="15" ry="2" class="ghost"/><text x="-6.00" y="40.00" text-anchor="end" style="font-size:2.2px;stroke-width:0.70px">AR ARM, 3 IN SCH 40 PIPE</text><text x="-6.00" y="42.60" class="m" text-anchor="end" style="font-size:2.2px;stroke-width:0.70px">ROLLED, R 46-15/16 TO CL</text><text x="5.00" y="8.20" text-anchor="start" style="font-size:2.2px;stroke-width:0.70px">HB HUB + HC COVER</text><text x="3.00" y="21.15" text-anchor="start" style="font-size:2.2px;stroke-width:0.70px">L1 LUG</text><text x="3.00" y="23.75" class="m" text-anchor="start" style="font-size:1.9px;stroke-width:0.61px">SHACKLE, SWIVEL,</text><text x="3.00" y="25.95" class="m" text-anchor="start" style="font-size:1.9px;stroke-width:0.61px">CARABINER</text><text x="16.00" y="77.40" class="m" text-anchor="start" style="font-size:2.2px;stroke-width:0.70px">SWING (RATED 350 LB+)</text><text x="46.91" y="57.00" class="m" text-anchor="end" style="font-size:1.9px;stroke-width:0.61px">FOAM SLEEVE</text><text x="46.41" y="90.00" text-anchor="end" style="font-size:2.2px;stroke-width:0.70px">AF + 4 AG</text><text x="46.41" y="92.50" class="m" text-anchor="end" style="font-size:2.2px;stroke-width:0.70px">RQ RING, BSP</text><line x1="-53.41" y1="8.00" x2="-64.00" y2="8.00" class="ext"/><line x1="-62.00" y1="8.00" x2="-62.00" y2="100.00" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/><text x="-63.30" y="54.00" class="d" text-anchor="middle" style="font-size:2.2px;stroke-width:0.70px" transform="rotate(-90 -63.30 54.00)">92 OVERALL</text><line x1="1.00" y1="18.75" x2="64.00" y2="18.75" class="ext"/><line x1="62.00" y1="18.75" x2="62.00" y2="100.00" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/><text x="60.60" y="59.38" class="d" text-anchor="middle" style="font-size:2.2px;stroke-width:0.70px" transform="rotate(-90 60.60 59.38)">81-1/4 FLOOR TO LUG HOLE</text><line x1="-50.91" y1="100.50" x2="-50.91" y2="105.50" class="ext"/><line x1="50.91" y1="100.50" x2="50.91" y2="105.50" class="ext"/><line x1="-50.91" y1="104.50" x2="50.91" y2="104.50" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/><text x="0.00" y="103.70" class="d" text-anchor="middle" style="font-size:2.2px;stroke-width:0.70px">101-13/16 LEG TO LEG (RING CL DIAMETER)</text></svg></div>
+  <figcaption>Section through one arch. Crossing arch not shown. For a ceiling under 96 in, shorten all four legs by the difference.</figcaption></figure>
+</section>
+
+<section>
+  <h2>Drawing 2: plan</h2>
+  <figure><div class="scroll"><svg class="dwg" viewBox="-62 -66 124 132" role="img" aria-label="Plan view: ring base in four quarters, arms on the diagonals, hub in the middle, four open bays."><rect x="-54.00" y="-54.00" width="108.00" height="108.00" class="mat"/><text x="-54.00" y="-55.20" class="m" text-anchor="start" style="font-size:2.2px;stroke-width:0.70px">STALL MATS, ABOUT 9 X 9 FT</text><circle cx="0" cy="0" r="48.16" class="zone"/><circle cx="0" cy="0" r="52.41" class="steelring"/><circle cx="0" cy="0" r="50.91" class="ringcl"/><circle cx="50.91" cy="-0.00" r="8.85" class="ghost"/><circle cx="50.91" cy="-0.00" r="0.95" class="hw"/><circle cx="0.00" cy="-50.91" r="8.85" class="ghost"/><circle cx="0.00" cy="-50.91" r="0.95" class="hw"/><circle cx="-50.91" cy="-0.00" r="8.85" class="ghost"/><circle cx="-50.91" cy="-0.00" r="0.95" class="hw"/><circle cx="-0.00" cy="50.91" r="8.85" class="ghost"/><circle cx="-0.00" cy="50.91" r="0.95" class="hw"/><polygon points="37.41,-28.93 28.93,-37.41 34.59,-43.07 43.07,-34.59" class="plate"/><line x1="34.44" y1="-34.44" x2="37.56" y2="-37.56" class="brk"/><line x1="36.00" y1="-36.00" x2="2.83" y2="-2.83" class="pipeo" style="stroke-width:4.1px"/><line x1="36.00" y1="-36.00" x2="2.83" y2="-2.83" class="pipei" style="stroke-width:3.1px"/><circle cx="36.00" cy="-36.00" r="1.75" class="steel"/><circle cx="37.22" cy="-34.74" r="0.42" class="bolt"/><circle cx="39.20" cy="-32.49" r="0.42" class="bolt"/><circle cx="34.74" cy="-37.22" r="0.42" class="bolt"/><circle cx="32.49" cy="-39.20" r="0.42" class="bolt"/><polygon points="-28.93,-37.41 -37.41,-28.93 -43.07,-34.59 -34.59,-43.07" class="plate"/><line x1="-34.44" y1="-34.44" x2="-37.56" y2="-37.56" class="brk"/><line x1="-36.00" y1="-36.00" x2="-2.83" y2="-2.83" class="pipeo" style="stroke-width:4.1px"/><line x1="-36.00" y1="-36.00" x2="-2.83" y2="-2.83" class="pipei" style="stroke-width:3.1px"/><circle cx="-36.00" cy="-36.00" r="1.75" class="steel"/><circle cx="-34.74" cy="-37.22" r="0.42" class="bolt"/><circle cx="-32.49" cy="-39.20" r="0.42" class="bolt"/><circle cx="-37.22" cy="-34.74" r="0.42" class="bolt"/><circle cx="-39.20" cy="-32.49" r="0.42" class="bolt"/><polygon points="-37.41,28.93 -28.93,37.41 -34.59,43.07 -43.07,34.59" class="plate"/><line x1="-34.44" y1="34.44" x2="-37.56" y2="37.56" class="brk"/><line x1="-36.00" y1="36.00" x2="-2.83" y2="2.83" class="pipeo" style="stroke-width:4.1px"/><line x1="-36.00" y1="36.00" x2="-2.83" y2="2.83" class="pipei" style="stroke-width:3.1px"/><circle cx="-36.00" cy="36.00" r="1.75" class="steel"/><circle cx="-37.22" cy="34.74" r="0.42" class="bolt"/><circle cx="-39.20" cy="32.49" r="0.42" class="bolt"/><circle cx="-34.74" cy="37.22" r="0.42" class="bolt"/><circle cx="-32.49" cy="39.20" r="0.42" class="bolt"/><polygon points="28.93,37.41 37.41,28.93 43.07,34.59 34.59,43.07" class="plate"/><line x1="34.44" y1="34.44" x2="37.56" y2="37.56" class="brk"/><line x1="36.00" y1="36.00" x2="2.83" y2="2.83" class="pipeo" style="stroke-width:4.1px"/><line x1="36.00" y1="36.00" x2="2.83" y2="2.83" class="pipei" style="stroke-width:3.1px"/><circle cx="36.00" cy="36.00" r="1.75" class="steel"/><circle cx="34.74" cy="37.22" r="0.42" class="bolt"/><circle cx="32.49" cy="39.20" r="0.42" class="bolt"/><circle cx="37.22" cy="34.74" r="0.42" class="bolt"/><circle cx="39.20" cy="32.49" r="0.42" class="bolt"/><polygon points="4.95,0.00 0.00,4.95 -4.95,0.00 0.00,-4.95" class="plate"/><circle cx="0" cy="0" r="1.1" class="hw"/><text x="0.00" y="-30.00" class="d" text-anchor="middle" style="font-size:2.4px;stroke-width:0.77px">OPEN</text><text x="0.00" y="31.50" class="d" text-anchor="middle" style="font-size:2.4px;stroke-width:0.77px">OPEN</text><text x="30.00" y="0.70" class="d" text-anchor="middle" style="font-size:2.4px;stroke-width:0.77px">OPEN</text><text x="-30.00" y="0.70" class="d" text-anchor="middle" style="font-size:2.4px;stroke-width:0.77px">OPEN</text><text x="0.00" y="-38.00" class="m" text-anchor="middle" style="font-size:1.9px;stroke-width:0.61px">LEG + PAD: 48-3/16 FROM THE HANG LINE</text><text x="43.49" y="-39.99" text-anchor="start" style="font-size:1.9px;stroke-width:0.61px">AF SPLICE</text><text x="43.49" y="-37.79" class="m" text-anchor="start" style="font-size:1.9px;stroke-width:0.61px">OVER JOINT</text><text x="54.91" y="1.00" class="m" text-anchor="start" style="font-size:1.8px;stroke-width:0.58px">PEG +</text><text x="54.91" y="3.20" class="m" text-anchor="start" style="font-size:1.8px;stroke-width:0.58px">PLATE</text><line x1="-52.41" y1="55.00" x2="-52.41" y2="62.00" class="ext"/><line x1="52.41" y1="55.00" x2="52.41" y2="62.00" class="ext"/><line x1="-52.41" y1="60.50" x2="52.41" y2="60.50" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/><text x="0.00" y="59.70" class="d" text-anchor="middle" style="font-size:2.2px;stroke-width:0.70px">104-13/16 RING OUTSIDE</text><line x1="0.00" y1="0.00" x2="41.70" y2="29.20" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/><text x="21.38" y="16.29" class="d" text-anchor="middle" style="font-size:2.0px;stroke-width:0.64px" transform="rotate(35 21.38 16.29)">R 50-15/16 TO RING CL</text><line x1="-36.00" y1="-37.00" x2="-36.00" y2="-60.00" class="ext"/><line x1="36.00" y1="-37.00" x2="36.00" y2="-60.00" class="ext"/><line x1="-36.00" y1="-58.50" x2="36.00" y2="-58.50" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/><text x="0.00" y="-59.30" class="d" text-anchor="middle" style="font-size:2.2px;stroke-width:0.70px">72 JOINT TO JOINT (EACH QUARTER)</text></svg></div>
+  <figcaption>Ring joints under the legs. AF over each joint, BSP under it, RF under the middle of each quarter.</figcaption></figure>
+</section>
+
+<section>
+  <h2>Drawing 3: arm for the roller</h2>
+  <figure><div class="scroll"><svg class="dwg" viewBox="-14 -2 80 108" role="img" aria-label="One arm in true shape for the pipe roller: straight leg, 90 degree bend, flanges at both ends."><line x1="0.00" y1="4.00" x2="0.00" y2="102.00" class="cl"/><text x="0.80" y="30.00" class="m" text-anchor="start" style="font-size:1.9px;stroke-width:0.61px">HANG LINE</text><path d="M50.91 96.12 L50.91 58.66 L50.87 56.62 L50.73 54.57 L50.51 52.54 L50.20 50.52 L49.80 48.51 L49.31 46.52 L48.74 44.56 L48.08 42.62 L47.34 40.71 L46.52 38.84 L45.61 37.00 L44.63 35.21 L43.56 33.46 L42.43 31.75 L41.22 30.10 L39.94 28.51 L38.59 26.97 L37.17 25.49 L35.69 24.07 L34.15 22.73 L32.56 21.44 L30.91 20.23 L29.21 19.10 L27.46 18.03 L25.66 17.05 L23.83 16.15 L21.95 15.32 L20.04 14.58 L18.11 13.92 L16.14 13.35 L14.15 12.86 L12.15 12.46 L10.12 12.15 L8.09 11.93 L6.05 11.79 L4.00 11.75" class="pipeo" style="stroke-width:4.1px"/><path d="M50.91 96.12 L50.91 58.66 L50.87 56.62 L50.73 54.57 L50.51 52.54 L50.20 50.52 L49.80 48.51 L49.31 46.52 L48.74 44.56 L48.08 42.62 L47.34 40.71 L46.52 38.84 L45.61 37.00 L44.63 35.21 L43.56 33.46 L42.43 31.75 L41.22 30.10 L39.94 28.51 L38.59 26.97 L37.17 25.49 L35.69 24.07 L34.15 22.73 L32.56 21.44 L30.91 20.23 L29.21 19.10 L27.46 18.03 L25.66 17.05 L23.83 16.15 L21.95 15.32 L20.04 14.58 L18.11 13.92 L16.14 13.35 L14.15 12.86 L12.15 12.46 L10.12 12.15 L8.09 11.93 L6.05 11.79 L4.00 11.75" class="pipei" style="stroke-width:3.1px"/><path d="M50.91 96.12 L50.91 58.66 L50.87 56.62 L50.73 54.57 L50.51 52.54 L50.20 50.52 L49.80 48.51 L49.31 46.52 L48.74 44.56 L48.08 42.62 L47.34 40.71 L46.52 38.84 L45.61 37.00 L44.63 35.21 L43.56 33.46 L42.43 31.75 L41.22 30.10 L39.94 28.51 L38.59 26.97 L37.17 25.49 L35.69 24.07 L34.15 22.73 L32.56 21.44 L30.91 20.23 L29.21 19.10 L27.46 18.03 L25.66 17.05 L23.83 16.15 L21.95 15.32 L20.04 14.58 L18.11 13.92 L16.14 13.35 L14.15 12.86 L12.15 12.46 L10.12 12.15 L8.09 11.93 L6.05 11.79 L4.00 11.75" class="cl"/><rect x="46.91" y="96.12" width="8.00" height="0.50" class="plate"/><rect x="49.41" y="96.62" width="3.00" height="3.00" class="ghost"/><rect x="48.91" y="99.62" width="4.00" height="0.38" class="ghost"/><rect x="3.50" y="8.75" width="0.50" height="6.00" class="plate"/><rect x="0.00" y="8.00" width="3.50" height="7.75" class="ghost"/><line x1="2.80" y1="58.66" x2="5.20" y2="58.66" class="ldr"/><line x1="4.00" y1="57.46" x2="4.00" y2="59.86" class="ldr"/><line x1="4.00" y1="58.66" x2="50.91" y2="58.66" class="ext"/><line x1="4.00" y1="58.66" x2="4.00" y2="11.75" class="ext"/><line x1="4.00" y1="58.66" x2="34.15" y2="22.73" class="dim" marker-end="url(#arr)"/><text x="15.46" y="45.07" class="d" text-anchor="start" style="font-size:2.0px;stroke-width:0.64px" transform="rotate(-50 15.46 45.07)">R 46-15/16 TO PIPE CL (46.91)</text><text x="5.00" y="61.26" class="m" text-anchor="start" style="font-size:1.8px;stroke-width:0.58px">BEND CENTER</text><text x="48.41" y="57.86" class="m" text-anchor="end" style="font-size:1.8px;stroke-width:0.58px">TANGENT</text><text x="17.82" y="20.25" class="m" text-anchor="middle" style="font-size:2.0px;stroke-width:0.64px">90 DEGREE BEND</text><line x1="53.31" y1="96.12" x2="60.91" y2="96.12" class="ext"/><line x1="53.31" y1="58.66" x2="60.91" y2="58.66" class="ext"/><line x1="59.41" y1="58.66" x2="59.41" y2="96.12" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/><text x="58.21" y="77.39" class="d" text-anchor="middle" style="font-size:2.0px;stroke-width:0.64px" transform="rotate(-90 58.21 77.39)">37-7/16 STRAIGHT LEG</text><line x1="50.91" y1="100.50" x2="50.91" y2="105.50" class="ext"/><line x1="0.00" y1="104.50" x2="50.91" y2="104.50" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/><text x="25.46" y="103.70" class="d" text-anchor="middle" style="font-size:2.0px;stroke-width:0.64px">50-15/16 HANG LINE TO LEG CL</text><line x1="4.00" y1="8.25" x2="4.00" y2="3.25" class="ext"/><line x1="0.00" y1="4.25" x2="4.00" y2="4.25" class="dim" marker-start="url(#arrs)" marker-end="url(#arrs)"/><text x="5.00" y="4.95" class="d" text-anchor="start" style="font-size:1.8px;stroke-width:0.58px">4 TO PIPE END</text><line x1="-1.00" y1="11.75" x2="-9.00" y2="11.75" class="ext"/><line x1="-7.00" y1="11.75" x2="-7.00" y2="100.00" class="dim" marker-start="url(#arr)" marker-end="url(#arr)"/><text x="-8.30" y="55.88" class="d" text-anchor="middle" style="font-size:2.0px;stroke-width:0.64px" transform="rotate(-90 -8.30 55.88)">88-1/4 FLOOR TO CROWN CL</text><line x1="-9.00" y1="100.00" x2="56.91" y2="100.00" class="floor"/><text x="8.00" y="68.00" text-anchor="start" style="font-size:1.8px;stroke-width:0.58px">PIPE CENTERLINE LENGTH:</text><text x="8.00" y="70.40" class="m" text-anchor="start" style="font-size:1.8px;stroke-width:0.58px">LEG 37-7/16 + BEND 73-11/16 = 111-1/8</text><text x="8.00" y="72.80" class="m" text-anchor="start" style="font-size:1.8px;stroke-width:0.58px">ROLL WITH EXTRA STRAIGHT ENDS,</text><text x="8.00" y="75.20" class="m" text-anchor="start" style="font-size:1.8px;stroke-width:0.58px">THEN TRIM TO THE FULL-SIZE</text><text x="8.00" y="77.60" class="m" text-anchor="start" style="font-size:1.8px;stroke-width:0.58px">FLOOR TEMPLATE.</text><text x="55.41" y="99.33" text-anchor="start" style="font-size:1.9px;stroke-width:0.61px">AF</text><text x="4.70" y="15.35" text-anchor="start" style="font-size:1.9px;stroke-width:0.61px">HF</text></svg></div>
+  <figcaption>One arm, true shape. Make 4, matched within 1/8 in.</figcaption></figure>
+  <ul>
+    <li>Arms: 3 in Sch 40 pipe, bend radius 46-15/16 in to the centerline, straight leg 37-7/16 in, 90 degree bend.</li>
+    <li>Ring quarters: 3x3x3/16 tube, radius 50-15/16 in to the centerline, 90 degrees each, 72 in straight across end to end. Cut the ends square to the curve.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Drawing 4: foot splice</h2>
+  <figure><div class="scroll"><svg class="dwg detail" viewBox="-10 -8 20 17.5" role="img" aria-label="Enlarged plan of an arm foot plate bolted over a ring joint."><path d="M-0.21 -1.50 L-0.48 -1.50 L-0.75 -1.49 L-1.03 -1.49 L-1.30 -1.48 L-1.57 -1.48 L-1.84 -1.47 L-2.12 -1.46 L-2.39 -1.45 L-2.66 -1.43 L-2.93 -1.42 L-3.21 -1.40 L-3.48 -1.38 L-3.75 -1.37 L-4.02 -1.35 L-4.29 -1.32 L-4.56 -1.30 L-4.84 -1.28 L-5.11 -1.25 L-5.38 -1.22 L-5.65 -1.19 L-5.92 -1.16 L-6.19 -1.13 L-6.46 -1.10 L-6.73 -1.07 L-7.00 -1.03 L-7.27 -0.99 L-7.54 -0.95 L-7.81 -0.91 L-8.08 -0.87 L-8.35 -0.83" class="steeledge"/><path d="M0.21 -1.50 L0.48 -1.50 L0.75 -1.49 L1.03 -1.49 L1.30 -1.48 L1.57 -1.48 L1.84 -1.47 L2.12 -1.46 L2.39 -1.45 L2.66 -1.43 L2.93 -1.42 L3.21 -1.40 L3.48 -1.38 L3.75 -1.37 L4.02 -1.35 L4.29 -1.32 L4.56 -1.30 L4.84 -1.28 L5.11 -1.25 L5.38 -1.22 L5.65 -1.19 L5.92 -1.16 L6.19 -1.13 L6.46 -1.10 L6.73 -1.07 L7.00 -1.03 L7.27 -0.99 L7.54 -0.95 L7.81 -0.91 L8.08 -0.87 L8.35 -0.83" class="steeledge"/><path d="M-0.20 1.50 L-0.45 1.50 L-0.71 1.51 L-0.97 1.51 L-1.23 1.52 L-1.48 1.52 L-1.74 1.53 L-2.00 1.54 L-2.25 1.55 L-2.51 1.56 L-2.77 1.58 L-3.02 1.59 L-3.28 1.61 L-3.53 1.63 L-3.79 1.65 L-4.05 1.67 L-4.30 1.69 L-4.56 1.71 L-4.81 1.74 L-5.07 1.76 L-5.33 1.79 L-5.58 1.82 L-5.84 1.85 L-6.09 1.88 L-6.35 1.91 L-6.60 1.94 L-6.86 1.98 L-7.11 2.01 L-7.36 2.05 L-7.62 2.09 L-7.87 2.13" class="steeledge"/><path d="M0.20 1.50 L0.45 1.50 L0.71 1.51 L0.97 1.51 L1.23 1.52 L1.48 1.52 L1.74 1.53 L2.00 1.54 L2.25 1.55 L2.51 1.56 L2.77 1.58 L3.02 1.59 L3.28 1.61 L3.53 1.63 L3.79 1.65 L4.05 1.67 L4.30 1.69 L4.56 1.71 L4.81 1.74 L5.07 1.76 L5.33 1.79 L5.58 1.82 L5.84 1.85 L6.09 1.88 L6.35 1.91 L6.60 1.94 L6.86 1.98 L7.11 2.01 L7.36 2.05 L7.62 2.09 L7.87 2.13" class="steeledge"/><line x1="-0.20" y1="1.90" x2="-0.20" y2="-1.90" class="brk"/><line x1="0.20" y1="1.90" x2="0.20" y2="-1.90" class="brk"/><rect x="-6.00" y="-4.00" width="12.00" height="8.00" class="platefade" rx="0.5"/><circle cx="0" cy="0" r="1.75" class="steel"/><polygon points="1.37,-1.10 2.96,-2.69 2.69,-2.96 1.10,-1.37" class="plate"/><polygon points="1.10,1.37 2.69,2.96 2.96,2.69 1.37,1.10" class="plate"/><polygon points="-1.10,-1.37 -2.69,-2.96 -2.96,-2.69 -1.37,-1.10" class="plate"/><polygon points="-1.37,1.10 -2.96,2.69 -2.69,2.96 -1.10,1.37" class="plate"/><circle cx="-1.750" cy="0.030" r="0.344" class="bolt"/><circle cx="-4.743" cy="0.221" r="0.344" class="bolt"/><circle cx="1.750" cy="0.030" r="0.344" class="bolt"/><circle cx="4.743" cy="0.221" r="0.344" class="bolt"/><text x="0.00" y="-7.30" class="m" text-anchor="middle" style="font-size:0.9px;stroke-width:0.29px">OUTSIDE OF RING</text><text x="-6.00" y="7.60" class="m" text-anchor="start" style="font-size:0.9px;stroke-width:0.29px">TOWARD THE SWING</text><text x="0.50" y="-4.40" class="m" text-anchor="start" style="font-size:0.8px;stroke-width:0.26px">RING JOINT</text><line x1="-6.00" y1="-4.90" x2="-6.00" y2="-6.40" class="ext"/><line x1="6.00" y1="-4.90" x2="6.00" y2="-6.40" class="ext"/><line x1="-6.00" y1="-5.90" x2="6.00" y2="-5.90" class="dim" marker-start="url(#arrt)" marker-end="url(#arrt)"/><text x="0.00" y="-6.30" class="d" text-anchor="middle" style="font-size:0.9px;stroke-width:0.29px">12</text><line x1="6.30" y1="-4.00" x2="8.40" y2="-4.00" class="ext"/><line x1="6.30" y1="4.00" x2="8.40" y2="4.00" class="ext"/><line x1="7.90" y1="-4.00" x2="7.90" y2="4.00" class="dim" marker-start="url(#arrt)" marker-end="url(#arrt)"/><text x="8.50" y="0.30" class="d" text-anchor="start" style="font-size:0.9px;stroke-width:0.29px">8</text><line x1="-4.74" y1="4.40" x2="-4.74" y2="6.60" class="ext"/><line x1="-1.75" y1="4.40" x2="-1.75" y2="6.60" class="ext"/><line x1="1.75" y1="4.40" x2="1.75" y2="6.60" class="ext"/><line x1="4.74" y1="4.40" x2="4.74" y2="6.60" class="ext"/><line x1="0.00" y1="4.40" x2="0.00" y2="6.60" class="ext"/><line x1="0.00" y1="5.40" x2="1.75" y2="5.40" class="dim" marker-start="url(#arrt)" marker-end="url(#arrt)"/><text x="0.88" y="5.10" class="d" text-anchor="middle" style="font-size:0.8px;stroke-width:0.26px">1-3/4</text><line x1="0.00" y1="6.30" x2="4.74" y2="6.30" class="dim" marker-start="url(#arrt)" marker-end="url(#arrt)"/><text x="4.54" y="7.30" class="d" text-anchor="end" style="font-size:0.8px;stroke-width:0.26px">4-3/4</text><text x="-6.00" y="9.10" text-anchor="start" style="font-size:0.85px;stroke-width:0.27px">4 BOLTS 5/8 GR 8 THROUGH SLEEVED RING HOLES. 4 GUSSETS AG AT 45 DEGREES.</text></svg></div>
+  <figcaption>AF over a ring joint, enlarged. Holes on the ring arc.</figcaption></figure>
+  <p>Drill the ring through the clamped AF. Sleeve each hole, welded flush top and bottom.</p>
+</section>
+
+<section>
+  <h2>CNC plates</h2>
+  <p>One DXF per plate, inches, centered on the origin. Layers: CUT and ETCH. Corners rounded.</p>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Code</th><th>Part</th><th>Thick</th><th>Qty</th><th>Size</th><th>Notes</th></tr></thead>
+    <tbody><tr><td class="c">AF</td><td>Arm foot / splice plate</td><td>1/2 in</td><td class="n">4</td><td>12 x 8</td><td>Leg welds on the etched circle. Holes follow the ring arc. 1/2 vent under the pipe.</td></tr><tr><td class="c">BSP</td><td>Bottom splice plate</td><td>3/8 in</td><td class="n">4</td><td>12 x 4</td><td>Same holes as AF. Goes under the ring joint.</td></tr><tr><td class="c">RF</td><td>Ring foot</td><td>3/8 in</td><td class="n">4</td><td>4 x 4</td><td>Under the middle of each ring quarter.</td></tr><tr><td class="c">HF</td><td>Hub flange</td><td>1/2 in</td><td class="n">4</td><td>6 x 6</td><td>Crown end of each arm. 1/2 vent inside the pipe.</td></tr><tr><td class="c">HWA</td><td>Hub wall, outer</td><td>1/2 in</td><td class="n">2</td><td>7 x 7</td><td>Tap top edge 1/4-20 at center.</td></tr><tr><td class="c">HWB</td><td>Hub wall, inner</td><td>1/2 in</td><td class="n">2</td><td>6 x 7</td><td>Fits between the outer walls. Tap top edge 1/4-20 at center.</td></tr><tr><td class="c">HBP</td><td>Hub bottom plate</td><td>1/2 in</td><td class="n">1</td><td>7 x 7</td><td>Lug welds on the etched line. 3/8 drain.</td></tr><tr><td class="c">HC</td><td>Hub cover + speaker mount</td><td>1/4 in</td><td class="n">1</td><td>8 x 8</td><td>4 screws into the wall tops. 2 strap slots for the speaker.</td></tr><tr><td class="c">L1</td><td>Hang lug</td><td>1/2 in</td><td class="n">1</td><td>4 x 5</td><td>Hole center 2 in up from the bottom edge.</td></tr><tr><td class="c">AG</td><td>Foot gusset</td><td>3/8 in</td><td class="n">16</td><td>2-1/4 x 4 triangle</td><td>3/8 corner clip.</td></tr><tr><td class="c">RC</td><td>Ring end cap</td><td>3/16 in</td><td class="n">8</td><td>3 x 3</td><td>1/4 vent.</td></tr></tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Tube and pipe</h2>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Code</th><th>Part</th><th>Material</th><th>Qty</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td class="c">AR</td><td>Arms</td><td>3 in Sch 40 pipe, A53 B</td><td class="n">4</td><td>111-1/8 in on the centerline each. About 37 ft total, plus extra for the roller's straight ends.</td></tr>
+      <tr><td class="c">RQ</td><td>Ring quarters</td><td>3x3x3/16 tube, A500</td><td class="n">4</td><td>About 27 ft total. Cap both ends of each.</td></tr>
+      <tr><td class="c">SL</td><td>Bolt sleeves</td><td>3/4 OD x .120 tube</td><td class="n">16</td><td>3 in long, welded flush through the ring.</td></tr>
+      <tr><td class="c">PG</td><td>Weight pegs (optional)</td><td>1-1/2 Sch 40 pipe</td><td class="n">4</td><td>8 in long, on the ring over each foot, 3/8 cross-hole 1 in from the top.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Hardware</h2>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Item</th><th>Qty</th><th>Spec</th></tr></thead>
+    <tbody>
+      <tr><td>Splice bolts</td><td class="n">16</td><td>5/8-11 x 5 Grade 8, hardened washers both sides, lock nuts. About 150 ft-lb.</td></tr>
+      <tr><td>Hub bolts</td><td class="n">16</td><td>1/2-13 x 2 Grade 8, hardened washers both sides, lock nuts inside the hub. About 75 ft-lb.</td></tr>
+      <tr><td>Cover screws</td><td class="n">4</td><td>1/4-20 x 3/4, into tapped holes in the hub wall tops</td></tr>
+      <tr><td>Shackle</td><td class="n">1</td><td>5/8 bolt-type anchor shackle, nut and cotter pin, WLL 3-1/4 ton</td></tr>
+      <tr><td>Swivel</td><td class="n">1</td><td>Ball-bearing swing swivel, stamped 1,500 lb or more</td></tr>
+      <tr><td>Carabiner</td><td class="n">1</td><td>Steel locking, stamped 25 kN or more</td></tr>
+      <tr><td>Padding</td><td class="n">-</td><td>Foam pipe insulation for 3 in pipe, or split pool noodles, on the legs up to about 6 ft and over the foot plates</td></tr>
+      <tr><td>Rubber pads</td><td class="n">8</td><td>3/8 in, under the 8 floor points</td></tr>
+      <tr><td>Stall mats</td><td class="n">4</td><td>3/4 in rubber, 4 x 6 ft</td></tr>
+      <tr><td>Speaker</td><td class="n">1</td><td>Small rugged Bluetooth speaker, strapped through the hub cover slots, with a safety cord</td></tr>
+      <tr><td>Weight plates (optional)</td><td class="n">4</td><td>45 lb Olympic plates and 4 hitch pins</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Files</h2>
+  <ul>
+    <li><a href="files/dxf/AF_1-2in_qty4.dxf">AF_1-2in_qty4.dxf</a></li>
+    <li><a href="files/dxf/AG_3-8in_qty16.dxf">AG_3-8in_qty16.dxf</a></li>
+    <li><a href="files/dxf/BSP_3-8in_qty4.dxf">BSP_3-8in_qty4.dxf</a></li>
+    <li><a href="files/dxf/HBP_1-2in_qty1.dxf">HBP_1-2in_qty1.dxf</a></li>
+    <li><a href="files/dxf/HC_1-4in_qty1.dxf">HC_1-4in_qty1.dxf</a></li>
+    <li><a href="files/dxf/HF_1-2in_qty4.dxf">HF_1-2in_qty4.dxf</a></li>
+    <li><a href="files/dxf/HWA_1-2in_qty2.dxf">HWA_1-2in_qty2.dxf</a></li>
+    <li><a href="files/dxf/HWB_1-2in_qty2.dxf">HWB_1-2in_qty2.dxf</a></li>
+    <li><a href="files/dxf/L1_1-2in_qty1.dxf">L1_1-2in_qty1.dxf</a></li>
+    <li><a href="files/dxf/RC_3-16in_qty8.dxf">RC_3-16in_qty8.dxf</a></li>
+    <li><a href="files/dxf/RF_3-8in_qty4.dxf">RF_3-8in_qty4.dxf</a></li>
+    <li><a href="files/swing_stand.glb">swing_stand.glb</a> (full assembly, parts named by code)</li>
+    <li><a href="files/swing_stand_steel.stl">swing_stand_steel.stl</a> (steel only, inches)</li>
+  </ul>
+</section>
+
+<footer>Rev C, 2026-11-22. Sizes in inches.</footer>
+</div>
+
+</body>
+</html>
