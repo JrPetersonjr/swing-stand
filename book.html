@@ -105,13 +105,13 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
       <tr><td class="c">BSP</td><td>Bottom splice plate</td><td class="n">4</td><td>3/8 in plate, 12 x 4, CNC</td></tr>
       <tr><td class="c">AG</td><td>Foot gusset</td><td class="n">16</td><td>3/8 in plate, 2-1/4 x 4 triangle, CNC</td></tr>
       <tr><td class="c">RF</td><td>Ring foot</td><td class="n">4</td><td>3/8 in plate, 4 x 4, CNC</td></tr>
-      <tr><td class="c">RC</td><td>Ring end cap</td><td class="n">8</td><td>3/16 in plate, 3 x 3, with a 1/4 vent hole</td></tr>
+      <tr><td class="c">RC1</td><td>Ring end cap, fill</td><td class="n">4</td><td>3/16 in plate, 3 x 3, with a 1/2 NPT half coupling</td></tr>
+      <tr><td class="c">RC2</td><td>Ring end cap, vent</td><td class="n">4</td><td>3/16 in plate, 3 x 3, with a 1/4 vent hole</td></tr>
       <tr><td class="c">HF</td><td>Hub flange</td><td class="n">4</td><td>1/2 in plate, 6 x 6, CNC</td></tr>
       <tr><td class="c">HB</td><td>Hub box</td><td class="n">1</td><td>1/2 in plate: 2 walls 7 x 7, 2 walls 6 x 7, bottom 7 x 7</td></tr>
       <tr><td class="c">HC</td><td>Hub cover</td><td class="n">1</td><td>1/4 in plate, 8 x 8, with speaker strap slots</td></tr>
       <tr><td class="c">L1</td><td>Hang lug</td><td class="n">1</td><td>1/2 in plate, 4 x 5, 13/16 hole</td></tr>
       <tr><td class="c">SL</td><td>Bolt sleeve</td><td class="n">16</td><td>3/4 OD x .120 wall tube, 3 in long</td></tr>
-      <tr><td class="c">PG</td><td>Weight peg (optional)</td><td class="n">4</td><td>1-1/2 Sch 40 pipe, 8 in long</td></tr>
       <tr><td></td><td>Splice bolts</td><td class="n">16</td><td>5/8-11 x 5 Grade 8, hardened washers, lock nuts</td></tr>
       <tr><td></td><td>Hub bolts</td><td class="n">16</td><td>1/2-13 x 2 Grade 8, hardened washers, lock nuts</td></tr>
       <tr><td></td><td>Cover screws</td><td class="n">4</td><td>1/4-20 x 3/4</td></tr>
@@ -119,6 +119,9 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
       <tr><td></td><td>Swivel</td><td class="n">1</td><td>Ball-bearing swing swivel, stamped 1,500 lb or more</td></tr>
       <tr><td></td><td>Carabiner</td><td class="n">1</td><td>Steel locking, stamped 25 kN or more</td></tr>
       <tr><td></td><td>Padding</td><td class="n">-</td><td>Foam pipe insulation for 3 in pipe, or split pool noodles</td></tr>
+      <tr><td></td><td>Foot boots</td><td class="n">4</td><td>Padded cover over each foot plate, gussets and bolt heads</td></tr>
+      <tr><td></td><td>Plugs</td><td class="n">8</td><td>4 x 1/2 NPT plugs, 4 x 1/4 rubber plugs</td></tr>
+      <tr><td></td><td>Ballast</td><td class="n">-</td><td>Dry sand, about 130 lb</td></tr>
       <tr><td></td><td>Rubber pads</td><td class="n">8</td><td>3/8 in, under the 8 floor points</td></tr>
       <tr><td></td><td>Stall mats</td><td class="n">4</td><td>3/4 in rubber, 4 x 6 ft</td></tr>
       <tr><td></td><td>Speaker</td><td class="n">1</td><td>Small rugged Bluetooth speaker, strap and safety cord</td></tr>
@@ -167,8 +170,8 @@ var STEPS = [
   { n: 3, title: "Drill the joints and fit the sleeves", show: M("RQ", "AF", "BSP"), hi: M("AF", "BSP"),
     text: ["At each joint, clamp an AF plate on top and a BSP plate underneath.", "Drill down through the ring using the plate holes as a guide.", "Push a sleeve through each hole and weld it flush top and bottom.", "Mark each plate to its joint."],
     check: "All 16 bolts drop in by hand." },
-  { n: 4, title: "Ring feet and end caps", show: RINGP, hi: M("RF", "PG"),
-    text: ["Weld a ring foot under the middle of each quarter.", "Cap all 8 ring ends and keep the vent holes open.", "If using weights, weld a peg on top over each foot."],
+  { n: 4, title: "Ring feet and end caps", show: RINGP, hi: M("RF"),
+    text: ["Weld a ring foot under the middle of each quarter.", "Cap each quarter: RC1 with the fill coupling on one end, RC2 on the other.", "Keep the coupling and vent open for coating."],
     check: "The bolted ring sits flat on all 8 points." },
   { n: 5, title: "Foot plates on the arms", show: M("AR", "AF", "AG"), hi: M("AF", "AG"),
     text: ["Unbolt the AF plates. Weld one square to the end of each leg, on the etched circle.", "Weld 4 gussets on each leg at 45 degrees, clear of the bolt holes."],
@@ -183,7 +186,7 @@ var STEPS = [
     text: ["Bolt the ring together.", "Stand each arm on its joint and bolt it finger-tight.", "Lift the hub into place and bolt all 4 arms to it, then tighten everything.", "Hang a plumb bob from the lug."],
     check: "The plumb bob lands within 1/4 in of the center of the ring." },
   { n: 9, title: "Take apart and coat", show: STEEL, hi: null,
-    text: ["Mark every joint, then take it apart.", "Grind every edge smooth and round.", "Make sure every vent hole is open, then powder coat."],
+    text: ["Mark every joint, then take it apart.", "Grind every edge smooth and round, plates and gussets included.", "Make sure every vent is open, then powder coat.", "After coating, fill each ring quarter with dry sand through its coupling, about 32 lb each. Plug both ends."],
     check: "No sharp edges anywhere." }
 ];
 
